@@ -1,4 +1,5 @@
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE CPP #-}
 
 -- |
 -- Module       : Data.List.Toolbox
@@ -16,12 +17,16 @@ module Data.List.Toolbox (
   safeLast,
   safeTail,
   safeInit,
+#if !MIN_VERSION_base(4,19,0)
   unsnoc,
+#endif
   tuple2,
   tuple3,
   tuple4,
   sublists,
+#if !MIN_VERSION_base(4,19,0)
   (!?),
+#endif
   enumerate,
   chopInfix,
   removed,
@@ -115,6 +120,7 @@ safeTail xs = list Nothing (const Just) xs
 safeInit :: [a] -> Maybe [a]
 safeInit xs = list Nothing (const $ Just . init) xs
 
+#if !MIN_VERSION_base(4,19,0)
 -- | Get the 'init' and 'last' of a (possibly empty) list safely.
 --
 -- > unsnoc [] == Nothing
@@ -122,6 +128,7 @@ safeInit xs = list Nothing (const $ Just . init) xs
 unsnoc :: [a] -> Maybe ([a], a)
 unsnoc [] = Nothing
 unsnoc as = Just (init as, last as)
+#endif
 
 -- | The list of all ordered sublists.
 --
@@ -146,6 +153,7 @@ tuple4 :: [a] -> Maybe (a, a, a, a)
 tuple4 (x : y : z : w : _) = Just (x, y, z, w)
 tuple4 _ = Nothing
 
+#if !MIN_VERSION_base(4,19,0)
 -- | Get the value of a list at an index, if the list is long enough. Safe version of '(!!)'.
 --
 -- > ['a', 'b', 'c'] !? 2 == Just 'c'
@@ -155,6 +163,7 @@ tuple4 _ = Nothing
 [] !? _ = Nothing
 xs !? 0 = safeHead xs
 (_ : xs) !? n = if n < 0 then Nothing else xs !? pred n
+#endif
 
 -- | Check if the list contains duplicates. /O(n^2)/.
 --
