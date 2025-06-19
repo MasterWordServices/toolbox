@@ -1,3 +1,5 @@
+{-# LANGUAGE CPP #-}
+
 -- |
 -- Module       : Data.List.NonEmpty.Toolbox
 -- Copyright    : (c) Melanie Brown 2021
@@ -33,7 +35,9 @@ module Data.List.NonEmpty.Toolbox (
   minimumOf1,
 
   -- * List functions
+#if !MIN_VERSION_base(4,20,0)
   sortOn,
+#endif
   union,
   unionBy,
   unionOn,
@@ -155,9 +159,11 @@ maximumOf1 f xs = fromJust $ FT.maximumOf f xs
 minimumOf1 :: (Ord b) => (a -> b) -> NonEmpty a -> b
 minimumOf1 f xs = fromJust $ FT.minimumOf f xs
 
+#if !MIN_VERSION_base(4,20,0)
 -- | A version of 'Data.List.sortOn' for 'NonEmpty' lists.
 sortOn :: (Ord b) => (a -> b) -> NonEmpty a -> NonEmpty a
 sortOn f xs = fromList . LT.sortOn f $ FT.toList xs
+#endif
 
 -- | A version of 'Data.List.union' for 'NonEmpty' lists.
 union :: (Eq a) => NonEmpty a -> NonEmpty a -> NonEmpty a
